@@ -16,7 +16,6 @@ WORLD_START_URL = "#{BASE_URL}/room/1"
 
 require_relative 'environments'
 
-
 class Page
   attr_accessor :url
   attr_accessor :title
@@ -55,31 +54,9 @@ def crawl_link(link, depth = 0)
     link['href'] =~ /room\/\d+$/
   end
 
-#  room_links = page_html.css('a').select { |link| link['href'] =~ /room\/\d*$/)
-
-
-
-  # full_filtered_links = []
-  # full_filtered_links << filtered_links.each do |link|
-  #   "#{BASE_URL}" + link['href']
-  # end
-  # puts "filtered_links"
-  # puts filtered_links
-  # puts "full_filtered_links"
-  # puts full_filtered_links
-
-
-  # this works but may not be useful
-#  puts "filtered_links"
-#  puts filtered_links
-  # filtered_links.map do |link|
-  #   link['href'] = "#{BASE_URL}" + link['href']
-  # end
-  # puts "fuller filtered_links"
-  # puts filtered_links
-
   # 6. Save the page info into a hash called $url_to_page which maps URLS to Page objects.
-  linkstring = "#{BASE_URL}" + link
+  # linkstring = "#{BASE_URL}" + link
+  # linkstring = "#{BASE_URL}" + link
   # $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name, :links => filtered_links})
 
   # 7. For each outbound link, call get_and_crawl_link(link)
@@ -89,49 +66,17 @@ def crawl_link(link, depth = 0)
     link_href = BASE_URL + filtered_link['href']
     cur_page_links << link_href
     if !$visited_links.include?("#{BASE_URL}" + filtered_link['href'])
-      # crawl_link("#{BASE_URL}" + filtered_link['href'])
       crawl_link(link_href)
     end
   end
-  $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name, :links => cur_page_links})
-
-
-
-
-#   filtered_links.each do |filtered_link|
-#     # if !$visited_links.include?("#{BASE_URL}" + link['href'])
-#       # 6. Save the page info into a hash called $url_to_page which maps URLS to Page objects.
-# #      linkstring = "#{BASE_URL}" + link['href']
-#       linkstring = "#{BASE_URL}" + link
-# #      puts "filtered_links"
-# #      puts filtered_links
-
-# #      $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name, :links => "blah"})
-#       $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name, :links => filtered_links})
-# #      $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name})
-
-#       # 7. For each outbound link, call get_and_crawl_link(link)
-# #    if !$visited_links.include?("#{BASE_URL}" + link['href'])
-#       # crawl_link("#{BASE_URL}" + link['href'])
-#     if !$visited_links.include?("#{BASE_URL}" + filtered_link['href'])
-#       crawl_link("#{BASE_URL}" + filtered_link['href'])
-#     end
-#   end
+#  $url_to_page[linkstring] = Page.new({:url => linkstring, :title => room_name, :links => cur_page_links})
+  $url_to_page[link] = Page.new({:url => link, :title => room_name, :links => cur_page_links})
 
 end
 
-crawl_link(WORLD_START_URL)
-
-puts "$visited_links"
-puts $visited_links
-
-puts "$url_to_page"
-puts $url_to_page.to_s
-
-
 # calling to .json
-$nodes_array = []
-$links_array = []
+# $nodes_array = []
+# $links_array = []
 
 #$url_to_pages.each do |url, page_object|
 # put a hash representing page_object into $nodes_array
@@ -156,13 +101,33 @@ def convert_to_json
 
   $url_to_page.each_with_index do |(url, page), i|
     page.links.each do |link|
-      ret[:links] << { :source => page.index, :target => $url_to_page[link].index, :value => 10 }
+      ret[:links] << { :source => page.index,
+        :target => $url_to_page[link].index,
+        :value => 10 }
     end
   end
+
+  puts "ret"
+  puts ret
 
   ret.to_json
 
 end
+
+crawl_link(WORLD_START_URL)
+
+puts "$visited_links"
+puts $visited_links
+
+puts "$url_to_page"
+puts $url_to_page.to_s
+
+$d3_hash = convert_to_json
+
+
+
+
+
 
 ## Start Sinatra App here:
 
