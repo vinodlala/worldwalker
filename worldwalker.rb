@@ -172,19 +172,24 @@ end
 
 get '/world.json' do
   content_type :json
-  ## Render the hash that d3.js org needs:
-  ## This example hash represents two rooms that you can walk back and forth to each other (notice that they both have links to each other and that the links point to the nodes array)
-  example_data = { :nodes => [
-    { :name => "Room name", :group => 1 },
-    { :name => "Another room", :group => 1 }
-      ],
-    :links => [
-    { :source => 0, :target => 1 },
-    { :source => 1, :target => 0 }
-      ]
-  }
-
-  # return the example data as JSON when asked
-  example_data.to_json
-
+  $d3_hash
 end
+
+# get '/world.json' do
+#   content_type :json
+#   ## Render the hash that d3.js org needs:
+#   ## This example hash represents two rooms that you can walk back and forth to each other (notice that they both have links to each other and that the links point to the nodes array)
+#   example_data = { :nodes => [
+#     { :name => "Room name", :group => 1 },
+#     { :name => "Another room", :group => 1 }
+#       ],
+#     :links => [
+#     { :source => 0, :target => 1 },
+#     { :source => 1, :target => 0 }
+#       ]
+#   }
+
+#   # return the example data as JSON when asked
+#   example_data.to_json
+
+# end
